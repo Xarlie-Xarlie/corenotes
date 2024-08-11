@@ -2,9 +2,10 @@ import noteService from '../services/noteService.js';
 import { ValidationError } from 'sequelize';
 
 // Get all notes
-export const getAllNotes = async (_req, res) => {
+export const getAllNotes = async (req, res) => {
+  const searchTerm = req.query.search || null;
   try {
-    const notes = await noteService.getAllNotes();
+    const notes = await noteService.getAllNotes(searchTerm);
     res.status(200).json({ notes: notes });
   } catch (error) {
     res.status(500).json({ error: 'Failed to retrieve notes' });

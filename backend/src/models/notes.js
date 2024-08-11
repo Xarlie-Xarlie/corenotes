@@ -1,7 +1,7 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../config/db.js'; // Assuming you export your sequelize instance
+import { DataTypes, Op, fn, col, where } from 'sequelize';
+import { sequelize } from '../config/db.js';
 
-const Note = sequelize.define('Note', {
+const Notes = sequelize.define('Notes', {
   title: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -26,8 +26,46 @@ const Note = sequelize.define('Note', {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  search: {
+    type: DataTypes.TSVECTOR,
+    allowNull: false,
+  },
 }, {
-  timestamps: true,  // Automatically adds `createdAt` and `updatedAt` fields
+  timestamps: true,
+  indexes: [
+    {
+      fields: ['search'],
+      using: 'gist',
+    },
+  ],
 });
 
-export default Note;
+Notes.addHook('beforeValidate', (note) => {
+  note.search = sequelize.fn('to_tsvector', `${note.title} ${note.description}`);
+});
+
+Notes.searchNotes = async function(term) {
+  return await Notes.findAll({
+    where: {
+      [Op.or]: [
+        where(
+          col('search'),
+          '@@',
+          fn('plainto_tsquery', 'english', term)
+        ),
+        {
+          description: {
+            [Op.iLike]: `%${term}%`
+          }
+        },
+        {
+          title: {
+            [Op.iLike]: `%${term}%`
+          }
+        }
+      ]
+    }
+  });
+};
+
+export default Notes;

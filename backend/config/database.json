@@ -7,12 +7,11 @@
     "dialect": "postgres"
   },
   "test": {
-    "username": "testdb",
-    "password": "testdb",
+    "username": "postgres",
+    "password": "postgres",
     "database": "notesdb_test",
-    "host": "notesdb",
-    "dialect": "sqlite",
-    "storage": ":memory:"
+    "host": "localhost",
+    "dialect": "postgres"
   },
   "production": {
     "username": "postgres",

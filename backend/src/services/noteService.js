@@ -1,19 +1,23 @@
-import Note from '../models/notes.js';
+import Notes from '../models/notes.js';
 
-const getAllNotes = async () => {
-  return await Note.findAll();
+const getAllNotes = async (searchTerm = null) => {
+  if (searchTerm) {
+    return await Notes.searchNotes(searchTerm);
+  }
+
+  return await Notes.findAll();
 };
 
 const getNoteById = async (id) => {
-  return await Note.findByPk(id);
+  return await Notes.findByPk(id);
 };
 
 const createNote = async (data) => {
-  return await Note.create(data);
+  return await Notes.create(data);
 };
 
 const updateNote = async (id, data) => {
-  const note = await Note.findByPk(id);
+  const note = await Notes.findByPk(id);
   if (note) {
     note.title = data.title ? data.title : note.title;
     note.description = data.description ? data.description : note.description;
@@ -25,7 +29,7 @@ const updateNote = async (id, data) => {
 };
 
 const deleteNote = async (id) => {
-  const note = await Note.findByPk(id);
+  const note = await Notes.findByPk(id);
   if (note) {
     await note.destroy();
     return note;
