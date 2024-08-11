@@ -232,6 +232,35 @@ describe('Note Model', () => {
     assert.equal(notes.length, 2);
   });
 
+  it('should be able to search for notes', async () => {
+    const note1 = await Note.create({ title: 'Note 1', description: 'desc 1', favorite: true });
+    const note2 = await Note.create({ title: 'Note 2', description: 'desc 2', favorite: true });
+
+    const notes = await Note.searchNotes('Note');
+
+    assert.ok(notes.every(n => n.id == note1.id || n.id == note2.id));
+    assert.equal(notes.length, 2);
+  });
+
+  it('should be able to find at least one note', async () => {
+    const note1 = await Note.create({ title: 'Note 1', description: 'desc 1', favorite: true });
+    await Note.create({ title: 'Test 1', description: 'Test 1', favorite: false });
+
+    const notes = await Note.searchNotes('Note');
+
+    assert.ok(notes.every(n => n.id == note1.id));
+    assert.equal(notes.length, 1);
+  });
+
+  it('should be able to not find any note', async () => {
+    await Note.create({ title: 'Note 1', description: 'desc 1', favorite: true });
+    await Note.create({ title: 'Note 2', description: 'desc 2', favorite: true });
+
+    const notes = await Note.searchNotes('Unknown');
+
+    assert.equal(notes.length, 0);
+  });
+
   it('should get a single note', async () => {
     const note = await Note.create({ title: 'Note 1', description: 'desc 1', favorite: true });
 

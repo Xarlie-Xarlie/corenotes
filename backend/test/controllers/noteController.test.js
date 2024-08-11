@@ -96,6 +96,38 @@ describe('Note Controller', () => {
     assert.deepEqual(mockJson.mock.calls[0].arguments[0], { notes: notes });
   });
 
+  it('should be able to search for notes', async () => {
+    const notes = [{ title: 'Test Note 1' }, { title: 'Test Note 2' }];
+    getAllNotesContext.mock.mockImplementation(async () => notes);
+
+    mockRequest.query = { search: 'Test' };
+
+    await noteController.getAllNotes(mockRequest, mockResponse);
+
+    assert.equal(noteService.getAllNotes.mock.callCount(), 1);
+    assert.deepEqual(noteService.getAllNotes.mock.calls[0].arguments[0], 'Test');
+    assert.equal(mockStatus.mock.callCount(), 1);
+    assert.equal(mockJson.mock.callCount(), 1);
+    assert.deepEqual(mockStatus.mock.calls[0].arguments[0], 200);
+    assert.deepEqual(mockJson.mock.calls[0].arguments[0], { notes: notes });
+  });
+
+  it('should be able to find at least one notes', async () => {
+    const notes = [{ title: 'ASDF' }];
+    getAllNotesContext.mock.mockImplementation(async () => notes);
+
+    mockRequest.query = { search: 'ASDF' };
+
+    await noteController.getAllNotes(mockRequest, mockResponse);
+
+    assert.equal(noteService.getAllNotes.mock.callCount(), 1);
+    assert.deepEqual(noteService.getAllNotes.mock.calls[0].arguments[0], 'ASDF');
+    assert.equal(mockStatus.mock.callCount(), 1);
+    assert.equal(mockJson.mock.callCount(), 1);
+    assert.deepEqual(mockStatus.mock.calls[0].arguments[0], 200);
+    assert.deepEqual(mockJson.mock.calls[0].arguments[0], { notes: notes });
+  });
+
   it('should handle errors when retrieving all notes', async () => {
     getAllNotesContext.mock.mockImplementation(async () => { throw Error('SequelizeValidationError') });
 

@@ -7,12 +7,14 @@ describe('Note Service', () => {
   let createContext;
   let findAllContext;
   let findByPkContext;
+  let searchNotesContext;
 
   beforeEach(async () => {
     mock.restoreAll();
     createContext = mock.method(Note, 'create');
     findAllContext = mock.method(Note, 'findAll');
     findByPkContext = mock.method(Note, 'findByPk');
+    searchNotesContext = mock.method(Note, 'searchNotes');
   });
 
   it('should create a note', async () => {
@@ -61,6 +63,43 @@ describe('Note Service', () => {
     assert.equal(notes.length, 2);
     assert.ok(notes.every(n => n.id == note1.id || n.id == note2.id));
     assert.equal(Note.findAll.mock.callCount(), 1);
+  });
+
+  it('should be able to search notes', async () => {
+    const note1 = new Note({ title: "test1", description: "description1", favorite: true, id: -2 });
+    const note2 = new Note({ title: "test2", description: "description2", favorite: false, id: -1 });
+
+    searchNotesContext.mock.mockImplementation(async () => [note1, note2]);
+
+    const notes = await noteService.getAllNotes('test');
+
+    assert.equal(notes.length, 2);
+    assert.ok(notes.every(n => n.id == note1.id || n.id == note2.id));
+    assert.equal(Note.searchNotes.mock.callCount(), 1);
+    assert.deepEqual(Note.searchNotes.mock.calls[0].arguments[0], 'test');
+  });
+
+  it('should be able to find at least one note', async () => {
+    const note1 = new Note({ title: "test1", description: "description1", favorite: true, id: -2 });
+
+    searchNotesContext.mock.mockImplementation(async () => [note1]);
+
+    const notes = await noteService.getAllNotes('test');
+
+    assert.equal(notes.length, 1);
+    assert.ok(notes.every(n => n.id == note1.id));
+    assert.equal(Note.searchNotes.mock.callCount(), 1);
+    assert.deepEqual(Note.searchNotes.mock.calls[0].arguments[0], 'test');
+  });
+
+  it('should be able to not find notes', async () => {
+    searchNotesContext.mock.mockImplementation(async () => []);
+
+    const notes = await noteService.getAllNotes('fdsa');
+
+    assert.equal(notes.length, 0);
+    assert.equal(Note.searchNotes.mock.callCount(), 1);
+    assert.deepEqual(Note.searchNotes.mock.calls[0].arguments[0], 'fdsa');
   });
 
   it('should retrieve a single note', async () => {
