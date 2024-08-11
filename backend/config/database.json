@@ -1,0 +1,24 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "notesdb",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "testdb",
+    "password": "testdb",
+    "database": "notesdb_test",
+    "host": "notesdb",
+    "dialect": "sqlite",
+    "storage": ":memory:"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "notesdb_prod",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}
