@@ -23,7 +23,7 @@ const updateNote = async (id, data) => {
     note.description = data.description ? data.description : note.description;
     note.favorite = data.favorite ? data.favorite : note.favorite;
     await note.save();
-    return note;
+    return note.dataValues;
   }
   return null;
 };

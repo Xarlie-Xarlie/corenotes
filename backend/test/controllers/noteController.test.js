@@ -259,9 +259,8 @@ describe('Note Controller', () => {
 
     assert.equal(noteService.deleteNote.mock.callCount(), 1);
     assert.equal(mockStatus.mock.callCount(), 1);
-    assert.equal(mockJson.mock.callCount(), 1);
+    assert.equal(mockJson.mock.callCount(), 0);
     assert.deepEqual(mockStatus.mock.calls[0].arguments[0], 204);
-    assert.deepEqual(mockJson.mock.calls[0].arguments[0], { message: 'Note deleted' });
   });
 
   it('should not delete a note that does not exists', async () => {

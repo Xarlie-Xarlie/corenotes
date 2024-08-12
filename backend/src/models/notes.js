@@ -38,6 +38,9 @@ const Notes = sequelize.define('Notes', {
       using: 'gist',
     },
   ],
+  defaultScope: {
+    attributes: { exclude: ['search'] },
+  },
 });
 
 Notes.addHook('beforeValidate', (note) => {

@@ -115,6 +115,7 @@ describe('Note Service', () => {
   it('should update a note', async () => {
     const save = mock.fn(async () => null);
     const note1 = { title: "test1", description: "description1", favorite: true, save: save };
+    note1.dataValues = note1;
 
     findByPkContext.mock.mockImplementation(async () => note1);
 

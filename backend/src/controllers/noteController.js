@@ -49,6 +49,7 @@ export const updateNote = async (req, res) => {
     const { title, description, favorite } = req.body;
     const note = await noteService.updateNote(id, { title, description, favorite });
     if (note) {
+      delete note.search;
       res.status(200).json(note);
     } else {
       res.status(404).json({ error: 'Note not found' });
@@ -68,7 +69,7 @@ export const deleteNote = async (req, res) => {
   try {
     const success = await noteService.deleteNote(id);
     if (success) {
-      res.status(204).json({ message: 'Note deleted' });
+      res.status(204);
     } else {
       res.status(404).json({ error: 'Note not found' });
     }
