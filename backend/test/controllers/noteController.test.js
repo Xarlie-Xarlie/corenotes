@@ -64,7 +64,7 @@ describe('Note Controller', () => {
     assert.equal(mockStatus.mock.callCount(), 1);
     assert.equal(mockJson.mock.callCount(), 1);
     assert.deepEqual(mockStatus.mock.calls[0].arguments[0], 400);
-    assert.deepEqual(mockJson.mock.calls[0].arguments[0], { error: [errorMessage] });
+    assert.deepEqual(mockJson.mock.calls[0].arguments[0], { errors: [errorMessage] });
   });
 
   it('should handle errors when creating a note', async () => {

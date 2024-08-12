@@ -35,7 +35,7 @@ export const createNote = async (req, res) => {
     res.status(201).json(note);
   } catch (error) {
     if (error instanceof ValidationError) {
-      res.status(400).json({ error: error.errors.map(e => e.message) });
+      res.status(400).json({ errors: error.errors.map(e => e.message) });
     } else {
       res.status(500).json({ error: 'Failed to create note' });
     }
