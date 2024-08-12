@@ -19,11 +19,12 @@
     "express": "^4.19.2",
     "pg": "^8.12.0",
     "sequelize": "^6.37.3",
-    "sequelize-cli": "^6.6.2"
+    "sequelize-cli": "^6.6.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "babel-register": "^6.26.0",
-    "sqlite3": "^5.1.7",
     "supertest": "^7.0.0"
   }
 }

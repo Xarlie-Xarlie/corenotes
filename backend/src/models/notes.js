@@ -1,6 +1,20 @@
 import { DataTypes, Op, fn, col, where } from 'sequelize';
 import { sequelize } from '../config/db.js';
 
+/**
+ * Notes Model.
+ *
+ * Sequelize ORM to interact with the database.
+ *
+ * fields:
+ *   id: Integer ID.
+ *   title: Title of the note.
+ *   description: Description of the note.
+ *   favorite: boolean to mark as favorite.
+ *   createdAt: CreatedAt timestamps.
+ *   updatedAt: UpdatedAt timestamps.
+ *
+ */
 const Notes = sequelize.define('Notes', {
   title: {
     type: DataTypes.STRING,
