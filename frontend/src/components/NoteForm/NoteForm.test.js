@@ -1,11 +1,10 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import NoteForm from './NoteForm';
-import SubmitNote from '../../hooks/SubmitNoteHook';
+import useSubmitNote from '../../hooks/useSubmitNote';
 import { toast } from 'react-toastify';
-import SubmitNoteHook from '../../hooks/SubmitNoteHook';
 
-jest.mock('../../hooks/SubmitNoteHook');
+jest.mock('../../hooks/useSubmitNote');
 
 jest.mock('react-toastify', () => ({
   toast: {
@@ -18,7 +17,7 @@ jest.mock('react-toastify', () => ({
 
 describe('NoteForm Component', () => {
   test('submits the form with title, description and favorite', async () => {
-    SubmitNote.mockReturnValue({});
+    useSubmitNote.mockReturnValue({});
     render(<NoteForm />);
 
     const titleInput = screen.getByPlaceholderText('Título');
@@ -33,7 +32,7 @@ describe('NoteForm Component', () => {
     fireEvent.keyDown(titleInput, { key: 'Enter', code: 'Enter' });
 
     await waitFor(() => {
-      expect(SubmitNoteHook).toHaveBeenCalledWith({
+      expect(useSubmitNote).toHaveBeenCalledWith({
         title: 'Test Title',
         description: 'Test Description',
         favorite: true
@@ -60,7 +59,7 @@ describe('NoteForm Component', () => {
 
 describe('NoteForm Component with Toast Messages', () => {
   test('displays warn toast if title is missing', () => {
-    SubmitNote.mockReturnValue({});
+    useSubmitNote.mockReturnValue({});
 
     render(<NoteForm />);
 
@@ -73,7 +72,7 @@ describe('NoteForm Component with Toast Messages', () => {
   });
 
   test('displays success toast on successful submission', async () => {
-    SubmitNote.mockReturnValue({});
+    useSubmitNote.mockReturnValue({});
 
     render(<NoteForm />);
 
@@ -93,7 +92,7 @@ describe('NoteForm Component with Toast Messages', () => {
   });
 
   test('displays error toast on submission failure', async () => {
-    SubmitNote.mockRejectedValue(new Error('Failed to submit the note'));
+    useSubmitNote.mockRejectedValue(new Error('Failed to submit the note'));
 
     render(<NoteForm />);
 
@@ -113,7 +112,7 @@ describe('NoteForm Component with Toast Messages', () => {
   });
 
   test('displays error toast on submission failure', async () => {
-    SubmitNote.mockRejectedValue(new Error('Failed to submit the note'));
+    useSubmitNote.mockRejectedValue(new Error('Failed to submit the note'));
 
     render(<NoteForm />);
 
@@ -136,7 +135,7 @@ describe('NoteForm Component with Toast Messages', () => {
     const errorMessage1 = 'Validation error: Title must be between 1 and 255 characters long';
     const errorMessage2 = 'Validation error: Description must be between 1 and 10000 characters long';
 
-    SubmitNote.mockReturnValue({ errors: [errorMessage1, errorMessage2] });
+    useSubmitNote.mockReturnValue({ errors: [errorMessage1, errorMessage2] });
 
     render(<NoteForm />);
 
