@@ -26,7 +26,7 @@ describe('SearchNotes Component', () => {
 
   test('renders search icon', () => {
     render(<SearchNotes />);
-    const searchIconElement = screen.getByAltText('Search');
+    const searchIconElement = screen.getByAltText('SearchIcon');
     expect(searchIconElement).toHaveAttribute('src', searchIcon);
   });
 
@@ -48,8 +48,38 @@ describe('SearchNotes Component - User Interactions', () => {
     expect(searchInputElement.value).toBe('New Note');
   });
 
+  test('allows user to click to search based in the search input', () => {
+    const onSearch = jest.fn();
+    render(<SearchNotes onSearch={onSearch} />);
+
+    const searchInputElement = screen.getByPlaceholderText('Pesquisar notas');
+
+    fireEvent.change(searchInputElement, { target: { value: 'New Note' } });
+
+    fireEvent.keyDown(searchInputElement, { key: 'Enter', code: 'Enter' });
+
+    expect(searchInputElement.value).toBe('New Note');
+    expect(onSearch).toHaveBeenCalledWith('New Note');
+  });
+
+  test('allows user to click in the search icon and perform a search', () => {
+    const onSearch = jest.fn();
+    render(<SearchNotes onSearch={onSearch} />);
+
+    const searchInputElement = screen.getByPlaceholderText('Pesquisar notas');
+
+    fireEvent.change(searchInputElement, { target: { value: 'New Note' } });
+
+    const searchButtonElement = screen.getByAltText('SearchIcon');
+    fireEvent.click(searchButtonElement);
+
+    expect(searchInputElement.value).toBe('New Note');
+    expect(onSearch).toHaveBeenCalledWith('New Note');
+  });
+
   test('clears the search input when the cross button is clicked', () => {
-    render(<SearchNotes />);
+    const onSearch = jest.fn();
+    render(<SearchNotes onSearch={onSearch} />);
 
     const searchInputElement = screen.getByPlaceholderText('Pesquisar notas');
     fireEvent.change(searchInputElement, { target: { value: 'New Note' } });
@@ -59,5 +89,6 @@ describe('SearchNotes Component - User Interactions', () => {
     fireEvent.click(crossButtonElement);
 
     expect(searchInputElement.value).toBe('');
+    expect(onSearch).toHaveBeenCalledWith('');
   });
 });

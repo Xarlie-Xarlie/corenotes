@@ -1,14 +1,29 @@
 import cross from "../../assets/cross.svg";
 import noteIcon from "../../assets/note-icon.png";
 import searchIcon from "../../assets/search-icon.png";
-import { useState } from "react";
+import { useState } from 'react';
 
-function SearchNotes() {
-  const clearSearch = () => { setSearchValue(''); };
+function SearchNotes({ onSearch }) {
   const [searchValue, setSearchValue] = useState('');
+
+  const clearSearch = () => {
+    setSearchValue('');
+    onSearch('');
+  };
 
   const handleInputChange = (event) => {
     setSearchValue(event.target.value);
+  };
+
+  const handleSearchClick = () => {
+    onSearch(searchValue);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      onSearch(searchValue);
+    }
   };
 
   return (
@@ -23,8 +38,14 @@ function SearchNotes() {
               placeholder="Pesquisar notas"
               value={searchValue}
               onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
             />
-            <img className="size-6" src={searchIcon} alt="Search" />
+            <img
+              className="size-6 cursor-pointer"
+              src={searchIcon}
+              alt="SearchIcon"
+              onClick={handleSearchClick}
+            />
           </div>
         </div>
         <div>

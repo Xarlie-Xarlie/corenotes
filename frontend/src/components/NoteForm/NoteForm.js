@@ -3,7 +3,7 @@ import useNoteForm from '../../hooks/useNoteForm';
 import useValidation from '../../hooks/useValidation';
 import useSubmitNote from '../../hooks/useSubmitNote';
 import FavoriteIcon from './FavoriteIcon';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function NoteForm() {
@@ -56,7 +56,6 @@ function NoteForm() {
         </div>
         <div className='flex'>
           <input
-            extraClasses={''}
             className="w-full px-4 py-6 focus:outline-none"
             value={description}
             onChange={handleDescriptionChange}
@@ -65,7 +64,6 @@ function NoteForm() {
             required
           />
         </div>
-        <ToastContainer />
       </div>
     </form>
   );
