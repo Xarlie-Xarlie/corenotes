@@ -1,76 +1,159 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import NoteForm from './NoteForm';
+import SubmitNote from '../../hooks/SubmitNoteHook';
+import { toast } from 'react-toastify';
+import SubmitNoteHook from '../../hooks/SubmitNoteHook';
+
+jest.mock('../../hooks/SubmitNoteHook');
+
+jest.mock('react-toastify', () => ({
+  toast: {
+    success: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  },
+  ToastContainer: () => <div />,
+}));
 
 describe('NoteForm Component', () => {
-  test('shows an error if the title is empty and Enter is pressed', () => {
-    render(<NoteForm onSubmit={jest.fn()} />);
+  test('submits the form with title, description and favorite', async () => {
+    SubmitNote.mockReturnValue({});
+    render(<NoteForm />);
 
-    const titleInput = screen.getByPlaceholderText('Título');
-    fireEvent.keyDown(titleInput, { key: 'Enter', code: 'Enter' });
-
-    expect(screen.getByText('Título não pode ser nulo')).toBeInTheDocument();
-  });
-
-  test('submits the form with title and description', async () => {
-    const mockSubmit = jest.fn().mockResolvedValue({});
-    render(<NoteForm onSubmit={mockSubmit} />);
-
-    // Simulate typing a title and description
     const titleInput = screen.getByPlaceholderText('Título');
     const descriptionInput = screen.getByPlaceholderText('Criar nota...');
     const favoriteIcon = screen.getByAltText('Not Favorite');
 
     fireEvent.change(titleInput, { target: { value: 'Test Title' } });
     fireEvent.change(descriptionInput, { target: { value: 'Test Description' } });
+
     fireEvent.click(favoriteIcon);
 
-    // Simulate pressing Enter to submit the form
     fireEvent.keyDown(titleInput, { key: 'Enter', code: 'Enter' });
 
-    // Wait for the mockSubmit to be called
     await waitFor(() => {
-      expect(mockSubmit).toHaveBeenCalledWith({
+      expect(SubmitNoteHook).toHaveBeenCalledWith({
         title: 'Test Title',
         description: 'Test Description',
         favorite: true
       });
 
-      // Ensure the inputs are cleared after submission
       expect(screen.getByAltText('Not Favorite')).toBeInTheDocument();
       expect(titleInput.value).toBe('');
       expect(descriptionInput.value).toBe('');
     });
   });
 
-  test('handles submit failure gracefully', async () => {
-    const mockSubmit = jest.fn().mockRejectedValue(new Error('Submission failed'));
-    render(<NoteForm onSubmit={mockSubmit} />);
-
-    // Simulate typing a title
-    const titleInput = screen.getByPlaceholderText('Título');
-    fireEvent.change(titleInput, { target: { value: 'Test Title' } });
-
-    // Simulate pressing Enter to submit the form
-    fireEvent.keyDown(titleInput, { key: 'Enter', code: 'Enter' });
-
-    // Expect the error message to be displayed
-    const errorMessage = await screen.findByText('Failed to submit the form');
-    expect(errorMessage).toBeInTheDocument();
-  });
-
   test('toggles the favorite status when the icon is clicked', () => {
-    render(<NoteForm onSubmit={jest.fn()} />);
+    render(<NoteForm />);
 
-    // Find the favorite icon and click it
     const favoriteIcon = screen.getByAltText('Not Favorite');
     fireEvent.click(favoriteIcon);
 
-    // Expect the icon to change to the "Favorite" icon
     expect(screen.getByAltText('Favorite')).toBeInTheDocument();
 
-    // Click again to toggle back to not favorite
     fireEvent.click(screen.getByAltText('Favorite'));
     expect(screen.getByAltText('Not Favorite')).toBeInTheDocument();
   });
 });
+
+describe('NoteForm Component with Toast Messages', () => {
+  test('displays warn toast if title is missing', () => {
+    SubmitNote.mockReturnValue({});
+
+    render(<NoteForm />);
+
+    const titleInput = screen.getByPlaceholderText('Título');
+
+    fireEvent.keyDown(titleInput, { key: 'Enter', code: 'Enter' });
+
+    expect(toast.warn).toHaveBeenCalledWith('Título não pode ser nulo!');
+    expect(toast.warn).toHaveBeenCalledWith('Descrição não pode ser nulo!');
+  });
+
+  test('displays success toast on successful submission', async () => {
+    SubmitNote.mockReturnValue({});
+
+    render(<NoteForm />);
+
+    const titleInput = screen.getByPlaceholderText('Título');
+    const descriptionInput = screen.getByPlaceholderText('Criar nota...');
+
+    fireEvent.change(titleInput, { target: { value: 'Test Title' } });
+    fireEvent.change(descriptionInput, { target: { value: 'Test Description' } });
+
+    fireEvent.keyDown(titleInput, { key: 'Enter', code: 'Enter' });
+
+    await waitFor(() => {
+      expect(toast.success).toHaveBeenCalledWith('Note submitted successfully!');
+      expect(toast.warn).toHaveBeenCalledTimes(0);
+      expect(toast.error).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  test('displays error toast on submission failure', async () => {
+    SubmitNote.mockRejectedValue(new Error('Failed to submit the note'));
+
+    render(<NoteForm />);
+
+    const titleInput = screen.getByPlaceholderText('Título');
+    const descriptionInput = screen.getByPlaceholderText('Criar nota...');
+
+    fireEvent.change(titleInput, { target: { value: 'Test Title' } });
+    fireEvent.change(descriptionInput, { target: { value: 'Description Title' } });
+
+    fireEvent.keyDown(titleInput, { key: 'Enter', code: 'Enter' });
+
+    await waitFor(() => {
+      expect(toast.success).toHaveBeenCalledTimes(0);
+      expect(toast.warn).toHaveBeenCalledTimes(0);
+      expect(toast.error).toHaveBeenCalledWith('Failed to submit the note');
+    });
+  });
+
+  test('displays error toast on submission failure', async () => {
+    SubmitNote.mockRejectedValue(new Error('Failed to submit the note'));
+
+    render(<NoteForm />);
+
+    const titleInput = screen.getByPlaceholderText('Título');
+    const descriptionInput = screen.getByPlaceholderText('Criar nota...');
+
+    fireEvent.change(titleInput, { target: { value: 'Test Title' } });
+    fireEvent.change(descriptionInput, { target: { value: 'Description Title' } });
+
+    fireEvent.keyDown(titleInput, { key: 'Enter', code: 'Enter' });
+
+    await waitFor(() => {
+      expect(toast.success).toHaveBeenCalledTimes(0);
+      expect(toast.warn).toHaveBeenCalledTimes(0);
+      expect(toast.error).toHaveBeenCalledWith('Failed to submit the note');
+    });
+  });
+
+  test('displays API error messages on submission', async () => {
+    const errorMessage1 = 'Validation error: Title must be between 1 and 255 characters long';
+    const errorMessage2 = 'Validation error: Description must be between 1 and 10000 characters long';
+
+    SubmitNote.mockReturnValue({ errors: [errorMessage1, errorMessage2] });
+
+    render(<NoteForm />);
+
+    const titleInput = screen.getByPlaceholderText('Título');
+    const descriptionInput = screen.getByPlaceholderText('Criar nota...');
+
+    fireEvent.change(titleInput, { target: { value: 'Test Title' } });
+    fireEvent.change(descriptionInput, { target: { value: 'Description Title' } });
+
+    fireEvent.keyDown(titleInput, { key: 'Enter', code: 'Enter' });
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(errorMessage1);
+      expect(toast.error).toHaveBeenCalledWith(errorMessage2);
+      expect(toast.success).toHaveBeenCalledTimes(0);
+      expect(toast.warn).toHaveBeenCalledTimes(0);
+    });
+  });
+});
+

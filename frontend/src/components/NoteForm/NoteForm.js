@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import favoriteIcon from '../../assets/favorite-on.png';
 import notFavoriteIcon from '../../assets/favorite-off.png';
+import submitNoteHook from '../../hooks/SubmitNoteHook';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function NoteForm({ onSubmit }) {
+function NoteForm() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [favorite, setFavorite] = useState(false);
-  const [error, setError] = useState('');
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
@@ -20,22 +22,36 @@ function NoteForm({ onSubmit }) {
     setFavorite(prevFavorite => !prevFavorite);
   };
 
+  const validateFields = (title, description) => {
+    const errors = [];
+    if (!title.trim()) errors.push('Título não pode ser nulo!');
+    if (!description.trim()) errors.push('Descrição não pode ser nulo!');
+    return errors;
+  };
+
   const handleSubmit = async (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      if (!title.trim()) {
-        setError('Título não pode ser nulo');
-        return;
+    if (event.key !== 'Enter') return;
+
+    event.preventDefault();
+    const errors = validateFields(title, description);
+    if (errors.length) {
+      errors.forEach(e => toast.warn(e));
+      return;
+    }
+
+    try {
+      const response = await submitNoteHook({ title, description, favorite });
+      setTitle('');
+      setDescription('');
+      setFavorite(false);
+
+      if (response.errors) {
+        response.errors.forEach(e => toast.error(e));
+      } else {
+        toast.success('Note submitted successfully!');
       }
-      setError('');
-      try {
-        await onSubmit({ title, description, favorite });
-        setTitle('');
-        setDescription('');
-        setFavorite(false);
-      } catch (e) {
-        setError('Failed to submit the form');
-      }
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
@@ -69,7 +85,7 @@ function NoteForm({ onSubmit }) {
             onKeyDown={handleSubmit}
           />
         </div>
-        {error && <div className="text-red-500 flex-0">{error}</div>}
+        <ToastContainer />
       </div>
     </form>
   );
