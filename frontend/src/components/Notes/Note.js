@@ -5,39 +5,70 @@ import notFavoriteIcon from '../../assets/favorite-off.png';
 import crossIcon from '../../assets/cross.svg';
 import changeColorIcon from '../../assets/paint-icon.png';
 import editIcon from '../../assets/pencil.svg';
+import useUpdateNote from '../../hooks/useUpdateNote'; // New hooks for API requests
+import useFavoriteToggle from '../../hooks/useFavoriteToggle';
+import useDeleteNote from '../../hooks/useDeleteNote';
+import useValidation from '../../hooks/useValidation';
+import { toast } from 'react-toastify';
 
 const COLORS = ['#FF5733', '#FFBD33', '#DBFF33', '#75FF33', '#33FF57', '#33FFBD', '#33DBFF', '#3375FF', '#5733FF', '#BD33FF', '#FF33DB', '#FF3375'];
 
-function Note({ note, onFavoriteToggle, onDelete, onUpdate }) {
+function Note({ note }) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(note.title);
   const [description, setDescription] = useState(note.description);
   const [showColorSelector, setShowColorSelector] = useState(false);
   const [noteColor, setNoteColor] = useState(note.color);
 
-  const handleFavoriteToggle = () => {
-    onFavoriteToggle(note.id);
+  const { updateNote } = useUpdateNote();
+  const { toggleFavorite } = useFavoriteToggle();
+  const { deleteNote } = useDeleteNote();
+  const { validateFields } = useValidation();
+
+  const handleFavoriteToggle = async () => {
+    try {
+      await toggleFavorite(note.id, !note.favorite);
+    } catch {
+      toast.error('Failed to submit note');
+    }
   };
 
-  const handleDelete = () => {
-    onDelete(note.id);
+  const handleDelete = async () => {
+    try {
+      await deleteNote(note.id);
+    } catch {
+      toast.error('Failed to delete note');
+    }
   };
 
-  const handleColorChange = (color) => {
+  const handleColorChange = async (color) => {
     setNoteColor(color);
-    console.log(color)
-    onUpdate(note.id, title, description, color);
     setShowColorSelector(false);
+    try {
+      await updateNote(note.id, title, description, color);
+    } catch {
+      toast.error('Failed to submit note');
+    }
   };
 
   const handleEditToggle = () => {
     setIsEditing(true);
   };
 
-  const handleEditKeyDown = (event) => {
-    if (event.key === 'Enter' && title.trim() && description.trim()) {
-      onUpdate(note.id, title, description, noteColor);
-      setIsEditing(false);
+  const handleEditKeyDown = async (event) => {
+    if (event.key !== 'Enter') return;
+
+    event.preventDefault()
+    const errors = validateFields(title, description);
+    if (errors.length) {
+      errors.forEach(e => toast.warn(e));
+      return;
+    }
+    setIsEditing(false);
+    try {
+      await updateNote(note.id, title, description, noteColor);
+    } catch {
+      toast.error('Failed to submit note');
     }
   };
 
@@ -110,8 +141,7 @@ function Note({ note, onFavoriteToggle, onDelete, onUpdate }) {
               onClick={() => handleColorChange(color)}
               data-testid={`color-${color}`}
             />
-          )
-          )}
+          ))}
         </div>
       )}
     </div>
