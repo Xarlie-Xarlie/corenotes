@@ -32,7 +32,7 @@ function SearchNotes({ onSearch }) {
         <div className="flex gap-4 grow">
           <img className="size-12" src={noteIcon} alt="NoteIcon" />
           <h4 className="text-xl text-[#455A64] p-2">CoreNotes</h4>
-          <div className="flex py-2 px-4 grow max-w-xl shadow-md border rounded-md border-[#D9D9D9]">
+          <div className="flex ml-4  py-2 px-4 grow max-w-xl shadow-md border rounded-md border-[#D9D9D9]">
             <input
               className="grow focus:outline-none text-[#9A9A9A]"
               placeholder="Pesquisar notas"
