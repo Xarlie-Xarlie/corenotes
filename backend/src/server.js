@@ -4,7 +4,7 @@ import noteRoutes from './routes/noteRoutes.js'; // Import your routes
 import swaggerDocs from './swagger.js'
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3333;
 
 // Middleware
 app.use(cors()); // Enable CORS for all routes

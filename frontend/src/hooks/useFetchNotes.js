@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const api = process.env.API_URL || 'http://localhost'
+const url = process.env.API_URL || 'http://localhost'
 const port = process.env.API_PORT || '3333'
 
 const useFetchNotes = (searchTerm) => {
@@ -10,8 +10,11 @@ const useFetchNotes = (searchTerm) => {
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const response = await fetch(`${api}:${port}/api/notes?search=${searchTerm}`);
+        const getUrl = searchTerm === '' ?
+          `${url}:${port}/api/notes`
+          : `${url}:${port}/api/notes?search=${searchTerm}`;
 
+        const response = await fetch(getUrl);
         if (!response.ok) {
           throw new Error('Failed to fetch notes');
         }
@@ -28,10 +31,7 @@ const useFetchNotes = (searchTerm) => {
       }
     };
 
-    // Fetch notes only if searchTerm is not empty
-    if (searchTerm) {
-      fetchNotes();
-    }
+    fetchNotes();
   }, [searchTerm]);
 
   return { notes, error };

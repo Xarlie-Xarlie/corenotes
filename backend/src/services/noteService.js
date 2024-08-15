@@ -19,9 +19,9 @@ const createNote = async (data) => {
 const updateNote = async (id, data) => {
   const note = await Notes.findByPk(id);
   if (note) {
-    note.title = data.title ? data.title : note.title;
-    note.description = data.description ? data.description : note.description;
-    note.favorite = data.favorite ? data.favorite : note.favorite;
+    note.title = data.title !== undefined ? data.title : note.title;
+    note.description = data.description !== undefined ? data.description : note.description;
+    note.favorite = data.favorite !== undefined ? data.favorite : note.favorite;
     await note.save();
     return note.dataValues;
   }

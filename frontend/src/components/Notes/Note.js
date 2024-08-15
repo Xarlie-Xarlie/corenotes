@@ -127,9 +127,9 @@ function Note({ note }) {
         )}
       </div>
       <div className="flex justify-end gap-2 mt-2">
-        <NoteButton icon={crossIcon} altText="Delete" onClick={handleDelete} />
-        <NoteButton icon={changeColorIcon} altText="Change Color" onClick={handleColorClick} />
         <NoteButton icon={editIcon} altText="Edit" onClick={handleEditToggle} />
+        <NoteButton icon={changeColorIcon} altText="Change Color" onClick={handleColorClick} />
+        <NoteButton icon={crossIcon} altText="Delete" onClick={handleDelete} />
       </div>
       {showColorSelector && (
         <div className="mt-4 flex gap-4">
