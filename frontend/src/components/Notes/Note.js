@@ -4,7 +4,7 @@ import favoriteIcon from '../../assets/favorite-on.png';
 import notFavoriteIcon from '../../assets/favorite-off.png';
 import crossIcon from '../../assets/cross.svg';
 import changeColorIcon from '../../assets/paint-icon.png';
-import editIcon from '../../assets/pencil.svg';
+import editIcon from '../../assets/edit-icon.png';
 import useUpdateNote from '../../hooks/useUpdateNote';
 import useFavoriteToggle from '../../hooks/useFavoriteToggle';
 import useDeleteNote from '../../hooks/useDeleteNote';
@@ -55,11 +55,11 @@ function Note({ note, onFavoriteToggle, onDeleteNote }) {
   };
 
   const handleEditToggle = () => {
-    setIsEditing(true);
+    setIsEditing(!isEditing);
   };
 
   const handleEditKeyDown = async (event) => {
-    if (event.key !== 'Enter') return;
+    if (event.key !== 'Enter' || event.shiftKey) return;
 
     event.preventDefault()
     const errors = validateFields(title, description);
@@ -99,18 +99,25 @@ function Note({ note, onFavoriteToggle, onDeleteNote }) {
   }, [isEditing, showColorSelector]);
 
   return (
-    <div className="note-container p-4 shadow-md border rounded-md">
-      <div className="flex justify-between">
+    <div
+      className="flex flex-col duration-500 note-container w-96 min-h-[450px] rounded-[36px] shadow-md border"
+      style={{ backgroundColor: noteColor }}
+    >
+      <div className={`
+        ${noteColor !== "#FFFFFF" ? 'border-white' : 'border-[#D9D9D9]'}
+        flex justify-between w-full border-b px-6 pt-4 pb-4
+      `}>
         {isEditing ? (
           <input
-            className="focus:outline-none text-lg w-full"
+            className="focus:outline-none break-all text-lg w-full"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             onKeyDown={handleEditKeyDown}
+            style={{ backgroundColor: noteColor }}
             autoFocus
           />
         ) : (
-          <h3 className="text-lg">{note.title}</h3>
+          <h3 className="text-sm font-bold place-self-center mr-4 truncate hover:break-all hover:text-wrap" >{note.title}</h3>
         )}
         <NoteButton
           icon={note.favorite ? favoriteIcon : notFavoriteIcon}
@@ -118,37 +125,52 @@ function Note({ note, onFavoriteToggle, onDeleteNote }) {
           onClick={handleFavoriteToggle}
         />
       </div>
-      <div className="mt-2">
+      <div className="pt-2 px-6 grow">
         {isEditing ? (
           <textarea
-            className="focus:outline-none w-full"
+            className="focus:outline-none h-52 w-full resize-y border border-black"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             onKeyDown={handleEditKeyDown}
+            style={{ backgroundColor: noteColor }}
           />
         ) : (
-          <p>{note.description}</p>
+          <p className="text-wrap overflow-hidden hover:max-h-full max-h-80">{note.description}</p>
         )}
       </div>
-      <div className="flex justify-end gap-2 mt-2">
-        <NoteButton icon={editIcon} altText="Edit" onClick={handleEditToggle} />
-        <NoteButton icon={changeColorIcon} altText="Change Color" onClick={handleColorClick} />
+      <div className="flex justify-between gap-2 px-6 py-4">
+        <div className="flex gap-4">
+          <NoteButton
+            icon={editIcon}
+            altText="Edit"
+            onClick={handleEditToggle}
+            isEditing={isEditing}
+          />
+          <NoteButton
+            icon={changeColorIcon}
+            altText="Change Color"
+            isEditing={showColorSelector}
+            onClick={handleColorClick}
+          />
+        </div>
         <NoteButton icon={crossIcon} altText="Delete" onClick={handleDelete} />
       </div>
-      {showColorSelector && (
-        <div className="mt-4 flex gap-4">
-          {COLORS.map(color => (
-            <div
-              key={color}
-              className="w-8 h-8"
-              style={{ backgroundColor: color }}
-              onClick={() => handleColorChange(color)}
-              data-testid={`color-${color}`}
-            />
-          ))}
-        </div>
-      )}
-    </div>
+      {
+        showColorSelector && (
+          <div className="flex-0 mt-4 flex gap-4 bg-white">
+            {COLORS.map(color => (
+              <input
+                key={color}
+                className="rounded-full w-6"
+                style={{ backgroundColor: color }}
+                onClick={() => handleColorChange(color)}
+                data-testid={`color-${color}`}
+              />
+            ))}
+          </div>
+        )
+      }
+    </div >
   );
 }
 
