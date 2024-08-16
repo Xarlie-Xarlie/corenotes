@@ -24,6 +24,7 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "babel-register": "^6.26.0",
     "supertest": "^7.0.0"
   }
