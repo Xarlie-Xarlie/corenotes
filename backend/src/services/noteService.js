@@ -22,6 +22,7 @@ const updateNote = async (id, data) => {
     note.title = data.title !== undefined ? data.title : note.title;
     note.description = data.description !== undefined ? data.description : note.description;
     note.favorite = data.favorite !== undefined ? data.favorite : note.favorite;
+    note.color = data.color !== undefined ? data.color : note.color;
     await note.save();
     return note.dataValues;
   }

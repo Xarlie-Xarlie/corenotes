@@ -13,6 +13,7 @@ describe('Note Model', () => {
     assert.equal(note.title, 'Test Note');
     assert.equal(note.description, 'This is a test');
     assert.equal(note.favorite, true);
+    assert.equal(note.color, '#FFFFFF');
   });
 
   it('should enforce title length validation', async () => {
@@ -70,6 +71,19 @@ describe('Note Model', () => {
     );
   });
 
+  it('should not create a note with invalid color', async () => {
+    await assert.rejects(
+      async () => {
+        await Note.create({ title: 'This is a test', description: 'description', favorite: false, color: 'asdf' });
+      },
+      (err) => {
+        assert.strictEqual(err.name, 'SequelizeDatabaseError');
+        assert.strictEqual(err.message, 'invalid input value for enum "enum_Notes_color": "asdf"');
+        return true;
+      },
+    );
+  });
+
   it('should update a note', async () => {
     const note = await Note.create({ title: 'Test Note', description: 'This is a test', favorite: true });
     assert.equal(note.title, 'Test Note');
@@ -79,6 +93,7 @@ describe('Note Model', () => {
     note.title = 'Updated Note';
     note.description = 'Updated Description';
     note.favorite = false;
+    note.color = '#BAE2FF';
 
     await note.save();
 
@@ -87,6 +102,7 @@ describe('Note Model', () => {
     assert.equal(updatedNote.title, 'Updated Note');
     assert.equal(updatedNote.description, 'Updated Description');
     assert.equal(updatedNote.favorite, false);
+    assert.equal(updatedNote.color, '#BAE2FF');
   });
 
   it('should update a note\'s title', async () => {
@@ -217,6 +233,26 @@ describe('Note Model', () => {
       (err) => {
         assert.strictEqual(err.name, 'SequelizeValidationError');
         assert.strictEqual(err.message, 'Validation error: Description must be between 1 and 10000 characters long');
+        return true;
+      },
+    );
+  });
+
+  it('shouldn\'t update to an invalid color', async () => {
+    const note = await Note.create({ title: 'Test Note', description: 'This is a test', favorite: true });
+    assert.equal(note.title, 'Test Note');
+    assert.equal(note.description, 'This is a test');
+    assert.equal(note.favorite, true);
+
+    note.color = 'testColor';
+
+    await assert.rejects(
+      async () => {
+        await note.save();
+      },
+      (err) => {
+        assert.strictEqual(err.name, 'SequelizeDatabaseError');
+        assert.strictEqual(err.message, 'invalid input value for enum "enum_Notes_color": "testColor"');
         return true;
       },
     );

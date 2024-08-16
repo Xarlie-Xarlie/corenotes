@@ -30,8 +30,8 @@ export const getNoteById = async (req, res) => {
 // Create a new note
 export const createNote = async (req, res) => {
   try {
-    const { title, description, favorite } = req.body;
-    const note = await noteService.createNote({ title, description, favorite });
+    const { title, description, favorite, color } = req.body;
+    const note = await noteService.createNote({ title, description, favorite, color });
     res.status(201).json(note);
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -46,8 +46,8 @@ export const createNote = async (req, res) => {
 export const updateNote = async (req, res) => {
   const { id } = req.params;
   try {
-    const { title, description, favorite } = req.body;
-    const note = await noteService.updateNote(id, { title, description, favorite });
+    const { title, description, favorite, color } = req.body;
+    const note = await noteService.updateNote(id, { title, description, favorite, color });
     if (note) {
       delete note.search;
       res.status(200).json(note);

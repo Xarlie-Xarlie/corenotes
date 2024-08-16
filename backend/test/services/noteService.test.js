@@ -22,17 +22,20 @@ describe('Note Service', () => {
       title: 'Service Note',
       description: 'Service layer test',
       favorite: false,
+      color: '#FFFFFF'
     }));
 
     const note = await noteService.createNote({
       title: 'Service Note',
       description: 'Service layer test',
       favorite: false,
+      color: '#FFFFFF'
     });
 
     assert.equal(note.title, 'Service Note');
     assert.equal(note.description, 'Service layer test');
     assert.equal(note.favorite, false);
+    assert.equal(note.color, '#FFFFFF')
     assert.equal(Note.create.mock.callCount(), 1);
   });
 
