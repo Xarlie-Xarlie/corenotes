@@ -1,6 +1,6 @@
 import Note from './Note';
 
-function Notes({ notes }) {
+function Notes({ notes, onFavoriteToggle, onDeleteNote }) {
   const favoriteNotes = notes.filter(note => note.favorite);
   const otherNotes = notes.filter(note => !note.favorite);
 
@@ -12,7 +12,11 @@ function Notes({ notes }) {
           <ul className="flex">
             {favoriteNotes.map(note => (
               <li key={note.id}>
-                <Note note={note} />
+                <Note
+                  note={note}
+                  onFavoriteToggle={onFavoriteToggle}
+                  onDeleteNote={onDeleteNote}
+                />
               </li>
             ))}
           </ul>
@@ -24,7 +28,11 @@ function Notes({ notes }) {
           <ul className="flex">
             {otherNotes.map(note => (
               <li key={note.id}>
-                <Note note={note} />
+                <Note
+                  note={note}
+                  onFavoriteToggle={onFavoriteToggle}
+                  onDeleteNote={onDeleteNote}
+                />
               </li>
             ))}
           </ul>

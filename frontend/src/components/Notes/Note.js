@@ -5,7 +5,7 @@ import notFavoriteIcon from '../../assets/favorite-off.png';
 import crossIcon from '../../assets/cross.svg';
 import changeColorIcon from '../../assets/paint-icon.png';
 import editIcon from '../../assets/pencil.svg';
-import useUpdateNote from '../../hooks/useUpdateNote'; // New hooks for API requests
+import useUpdateNote from '../../hooks/useUpdateNote';
 import useFavoriteToggle from '../../hooks/useFavoriteToggle';
 import useDeleteNote from '../../hooks/useDeleteNote';
 import useValidation from '../../hooks/useValidation';
@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 
 const COLORS = ['#FF5733', '#FFBD33', '#DBFF33', '#75FF33', '#33FF57', '#33FFBD', '#33DBFF', '#3375FF', '#5733FF', '#BD33FF', '#FF33DB', '#FF3375'];
 
-function Note({ note }) {
+function Note({ note, onFavoriteToggle, onDeleteNote }) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(note.title);
   const [description, setDescription] = useState(note.description);
@@ -27,7 +27,8 @@ function Note({ note }) {
 
   const handleFavoriteToggle = async () => {
     try {
-      await toggleFavorite(note.id, !note.favorite);
+      const updatedNote = await toggleFavorite(note.id, !note.favorite);
+      onFavoriteToggle(updatedNote);
     } catch {
       toast.error('Failed to submit note');
     }
@@ -36,6 +37,7 @@ function Note({ note }) {
   const handleDelete = async () => {
     try {
       await deleteNote(note.id);
+      onDeleteNote(note)
     } catch {
       toast.error('Failed to delete note');
     }
@@ -45,7 +47,8 @@ function Note({ note }) {
     setNoteColor(color);
     setShowColorSelector(false);
     try {
-      await updateNote(note.id, title, description, color);
+      const updatedNote = await updateNote(note.id, title, description, color);
+      onFavoriteToggle(updatedNote);
     } catch {
       toast.error('Failed to submit note');
     }
@@ -66,7 +69,8 @@ function Note({ note }) {
     }
     setIsEditing(false);
     try {
-      await updateNote(note.id, title, description, noteColor);
+      const updatedNote = await updateNote(note.id, title, description, noteColor);
+      onFavoriteToggle(updatedNote);
     } catch {
       toast.error('Failed to submit note');
     }

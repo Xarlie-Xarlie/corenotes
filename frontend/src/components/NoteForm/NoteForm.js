@@ -6,7 +6,7 @@ import FavoriteIcon from './FavoriteIcon';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function NoteForm() {
+function NoteForm({ onNoteCreated }) {
   const {
     title, description, favorite,
     handleTitleChange, handleDescriptionChange,
@@ -33,6 +33,7 @@ function NoteForm() {
       if (response.errors) {
         response.errors.forEach(e => toast.error(e));
       } else {
+        onNoteCreated(response);
         toast.success('Note submitted successfully!');
       }
     } catch (error) {
@@ -56,7 +57,7 @@ function NoteForm() {
         </div>
         <div className='flex'>
           <input
-            className="w-full px-4 py-6 focus:outline-none"
+            className="w-full px-6 py-6 focus:outline-none"
             value={description}
             onChange={handleDescriptionChange}
             onKeyDown={handleSubmit}

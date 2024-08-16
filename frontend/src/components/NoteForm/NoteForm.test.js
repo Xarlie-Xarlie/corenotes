@@ -84,7 +84,9 @@ describe('NoteForm Component with Toast Messages', () => {
   });
 
   test('displays success toast on successful submission', async () => {
-    render(<NoteForm />);
+    submitNote.mockReturnValue({ title: 'Created Title' })
+    const mockNoteCreated = jest.fn()
+    render(<NoteForm onNoteCreated={mockNoteCreated} />);
 
     const titleInput = screen.getByPlaceholderText('Título');
     const descriptionInput = screen.getByPlaceholderText('Criar nota...');
@@ -95,6 +97,7 @@ describe('NoteForm Component with Toast Messages', () => {
     fireEvent.keyDown(titleInput, { key: 'Enter', code: 'Enter' });
 
     await waitFor(() => {
+      expect(mockNoteCreated).toHaveBeenCalledWith({ title: 'Created Title' });
       expect(toast.success).toHaveBeenCalledWith('Note submitted successfully!');
       expect(toast.warn).toHaveBeenCalledTimes(0);
       expect(toast.error).toHaveBeenCalledTimes(0);

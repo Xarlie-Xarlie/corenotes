@@ -10,10 +10,13 @@ const useSubmitNote = () => {
         },
         body: JSON.stringify({ title, description, favorite }),
       });
-      if (!response.ok) {
+      const result = await response.json();
+
+      if (result.errors) {
+        return result
+      } else if (!response.ok) {
         throw new Error('Failed to submit the note');
       }
-      const result = await response.json();
       return result;
     } catch (err) {
       throw err;

@@ -34,7 +34,7 @@ const useFetchNotes = (searchTerm) => {
     fetchNotes();
   }, [searchTerm]);
 
-  return { notes, error };
+  return { notes, setNotes, error };
 };
 
 export default useFetchNotes;

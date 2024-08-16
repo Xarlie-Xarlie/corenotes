@@ -259,7 +259,8 @@ describe('Note Controller', () => {
 
     assert.equal(noteService.deleteNote.mock.callCount(), 1);
     assert.equal(mockStatus.mock.callCount(), 1);
-    assert.equal(mockJson.mock.callCount(), 0);
+    assert.equal(mockJson.mock.callCount(), 1);
+    assert.equal(mockJson.mock.calls[0].arguments[0], undefined)
     assert.deepEqual(mockStatus.mock.calls[0].arguments[0], 204);
   });
 

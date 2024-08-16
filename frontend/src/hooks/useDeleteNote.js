@@ -14,8 +14,6 @@ const useDeleteNote = () => {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to delete note');
       }
-
-      return await response.json();
     } catch (error) {
       throw new Error(error.message || 'Failed to delete note');
     }
