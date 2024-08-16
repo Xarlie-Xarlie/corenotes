@@ -11,7 +11,7 @@ import useDeleteNote from '../../hooks/useDeleteNote';
 import useValidation from '../../hooks/useValidation';
 import { toast } from 'react-toastify';
 
-const COLORS = ['#FFFFFF', '#BAE2FF', '#B9FFDD', '#FFE8AC', '#FFCAB9', '#F99494', '#9DD6FF', '#ECA1FF', '#DAFF8B', '#FFA285', '#CDCDCD', '#979797', '#A99A7C'];
+const COLORS = ['#BAE2FF', '#B9FFDD', '#FFE8AC', '#FFCAB9', '#F99494', '#9DD6FF', '#ECA1FF', '#DAFF8B', '#FFA285', '#CDCDCD', '#979797', '#A99A7C'];
 
 function Note({ note, onFavoriteToggle, onDeleteNote }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -99,74 +99,92 @@ function Note({ note, onFavoriteToggle, onDeleteNote }) {
   }, [isEditing, showColorSelector]);
 
   return (
-    <div
-      className="flex flex-col duration-500 note-container w-96 min-h-[450px] rounded-[36px] shadow-md border"
-      style={{ backgroundColor: noteColor }}
-    >
-      <div className={`
+    <div>
+      <div
+        className="flex flex-col duration-500 note-container w-96 min-h-[450px] rounded-[36px] shadow-md border"
+        style={{ backgroundColor: noteColor }}
+      >
+        <div className={`
         ${noteColor !== "#FFFFFF" ? 'border-white' : 'border-[#D9D9D9]'}
-        flex justify-between w-full border-b px-6 pt-4 pb-4
+        flex justify-between w-full border-b px-6 pt-4 pb-2
       `}>
-        {isEditing ? (
-          <input
-            className="focus:outline-none break-all text-lg w-full"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            onKeyDown={handleEditKeyDown}
-            style={{ backgroundColor: noteColor }}
-            autoFocus
-          />
-        ) : (
-          <h3 className="text-sm font-bold place-self-center mr-4 truncate hover:break-all hover:text-wrap" >{note.title}</h3>
-        )}
-        <NoteButton
-          icon={note.favorite ? favoriteIcon : notFavoriteIcon}
-          altText="Favorite"
-          onClick={handleFavoriteToggle}
-        />
-      </div>
-      <div className="pt-2 px-6 grow">
-        {isEditing ? (
-          <textarea
-            className="focus:outline-none h-52 w-full resize-y border border-black"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            onKeyDown={handleEditKeyDown}
-            style={{ backgroundColor: noteColor }}
-          />
-        ) : (
-          <p className="text-wrap overflow-hidden hover:max-h-full max-h-80">{note.description}</p>
-        )}
-      </div>
-      <div className="flex justify-between gap-2 px-6 py-4">
-        <div className="flex gap-4">
+          {isEditing ? (
+            <input
+              className="focus:outline-none break-all text-lg w-full"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              onKeyDown={handleEditKeyDown}
+              style={{ backgroundColor: noteColor }}
+              autoFocus
+            />
+          ) : (
+            <h3 className="text-sm font-bold place-self-center mr-4 truncate hover:break-all hover:text-wrap" >{note.title}</h3>
+          )}
           <NoteButton
-            icon={editIcon}
-            altText="Edit"
-            onClick={handleEditToggle}
-            isEditing={isEditing}
-          />
-          <NoteButton
-            icon={changeColorIcon}
-            altText="Change Color"
-            isEditing={showColorSelector}
-            onClick={handleColorClick}
+            icon={note.favorite ? favoriteIcon : notFavoriteIcon}
+            altText="Favorite"
+            onClick={handleFavoriteToggle}
           />
         </div>
-        <NoteButton icon={crossIcon} altText="Delete" onClick={handleDelete} />
+        <div className="pt-2 px-6 grow">
+          {isEditing ? (
+            <textarea
+              className="focus:outline-none h-52 w-full resize-y border border-black"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              onKeyDown={handleEditKeyDown}
+              style={{ backgroundColor: noteColor }}
+            />
+          ) : (
+            <p className="text-wrap overflow-hidden hover:max-h-full max-h-80">{note.description}</p>
+          )}
+        </div>
+        <div className="flex justify-between gap-2 px-6 py-4">
+          <div className="flex gap-4">
+            <NoteButton
+              icon={editIcon}
+              altText="Edit"
+              onClick={handleEditToggle}
+              isEditing={isEditing}
+            />
+            <NoteButton
+              icon={changeColorIcon}
+              altText="Change Color"
+              isEditing={showColorSelector}
+              onClick={handleColorClick}
+            />
+          </div>
+          <NoteButton icon={crossIcon} altText="Delete" onClick={handleDelete} />
+        </div>
       </div>
       {
         showColorSelector && (
-          <div className="flex-0 mt-4 flex gap-4 bg-white">
-            {COLORS.map(color => (
-              <input
-                key={color}
-                className="rounded-full w-6"
-                style={{ backgroundColor: color }}
-                onClick={() => handleColorChange(color)}
-                data-testid={`color-${color}`}
-              />
-            ))}
+          <div className={`
+            absolute
+            -mt-4
+            ml-16
+            flex
+            flex-wrap
+            rounded-xl
+            gap-4
+            p-2
+            bg-white
+            shadow-md
+            border
+            border-[#D9D9D9]
+            `}
+          >
+            {
+              COLORS.map(color => (
+                <input
+                  key={color}
+                  className="cursor-pointer rounded-full size-10"
+                  style={{ backgroundColor: color }}
+                  onClick={() => handleColorChange(color)}
+                  data-testid={`color-${color}`}
+                />
+              ))
+            }
           </div>
         )
       }
