@@ -27,7 +27,20 @@ jest.mock('react-toastify', () => ({
   ToastContainer: () => <div />,
 }));
 
-const COLORS = ['#FFFFFF', '#BAE2FF', '#B9FFDD', '#FFE8AC', '#FFCAB9', '#F99494', '#9DD6FF', '#ECA1FF', '#DAFF8B', '#FFA285', '#CDCDCD', '#979797', '#A99A7C'];
+const COLORS = [
+  '#BAE2FF',
+  '#B9FFDD',
+  '#FFE8AC',
+  '#FFCAB9',
+  '#F99494',
+  '#9DD6FF',
+  '#ECA1FF',
+  '#DAFF8B',
+  '#FFA285',
+  '#CDCDCD',
+  '#979797',
+  '#A99A7C'
+];
 
 describe('Note Component', () => {
   beforeEach(() => {
@@ -237,7 +250,7 @@ describe('Note Component - Toast Messages', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockNote = { id: 1, title: 'Sample Title', description: 'Sample Description', favorite: false, color: '#FFFFFF' };
+    mockNote = { id: 1, title: 'Sample Title', description: 'Sample Description', favorite: false, color: '#BAE2FF' };
     mockUpdateNote = jest.fn();
     mockFavoriteToggle = jest.fn();
     mockDeleteNote = jest.fn();

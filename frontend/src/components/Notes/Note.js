@@ -99,14 +99,14 @@ function Note({ note, onFavoriteToggle, onDeleteNote }) {
   }, [isEditing, showColorSelector]);
 
   return (
-    <div>
+    <div className="w-full">
       <div
-        className="flex flex-col duration-500 note-container w-96 min-h-[450px] rounded-[36px] shadow-md border"
+        className="flex flex-col duration-500 note-container w-full lg:w-96 min-h-[450px] rounded-[36px] shadow-md border"
         style={{ backgroundColor: noteColor }}
       >
         <div className={`
         ${noteColor !== "#FFFFFF" ? 'border-white' : 'border-[#D9D9D9]'}
-        flex justify-between w-full border-b px-6 pt-4 pb-2
+        flex justify-between items-center border-b px-6 pt-4 pb-2
       `}>
           {isEditing ? (
             <input
@@ -118,7 +118,7 @@ function Note({ note, onFavoriteToggle, onDeleteNote }) {
               autoFocus
             />
           ) : (
-            <h3 className="text-sm font-bold place-self-center mr-4 truncate hover:break-all hover:text-wrap" >{note.title}</h3>
+            <h3 className="text-sm font-bold break-all lg:truncate hover:text-wrap">{note.title}</h3>
           )}
           <NoteButton
             icon={note.favorite ? favoriteIcon : notFavoriteIcon}
@@ -136,7 +136,7 @@ function Note({ note, onFavoriteToggle, onDeleteNote }) {
               style={{ backgroundColor: noteColor }}
             />
           ) : (
-            <p className="text-wrap overflow-hidden hover:max-h-full max-h-80">{note.description}</p>
+            <p className="text-wrap overflow-hidden hover:max-h-full lg:max-h-72">{note.description}</p>
           )}
         </div>
         <div className="flex justify-between gap-2 px-6 py-4">
@@ -157,38 +157,33 @@ function Note({ note, onFavoriteToggle, onDeleteNote }) {
           <NoteButton icon={crossIcon} altText="Delete" onClick={handleDelete} />
         </div>
       </div>
-      {
-        showColorSelector && (
-          <div className={`
-            absolute
-            -mt-4
-            ml-16
-            flex
-            flex-wrap
-            rounded-xl
-            gap-4
-            p-2
-            bg-white
-            shadow-md
-            border
-            border-[#D9D9D9]
-            `}
-          >
-            {
-              COLORS.map(color => (
-                <input
-                  key={color}
-                  className="cursor-pointer rounded-full size-10"
-                  style={{ backgroundColor: color }}
-                  onClick={() => handleColorChange(color)}
-                  data-testid={`color-${color}`}
-                />
-              ))
-            }
-          </div>
-        )
-      }
-    </div >
+      {showColorSelector && (
+        <div className={`
+          absolute
+          -mt-4
+          ml-16
+          flex
+          flex-wrap
+          rounded-xl
+          gap-4
+          p-2
+          bg-white
+          shadow-md
+          border
+          border-[#D9D9D9]
+        `}>
+          {COLORS.map(color => (
+            <input
+              key={color}
+              className="cursor-pointer rounded-full size-10"
+              style={{ backgroundColor: color }}
+              onClick={() => handleColorChange(color)}
+              data-testid={`color-${color}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
