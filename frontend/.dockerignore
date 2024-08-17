@@ -1,0 +1,6 @@
+build
+README.md
+.gitignore
+dockerfile
+setupTests.js
+**/*.test.js
