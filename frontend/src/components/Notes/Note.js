@@ -27,8 +27,12 @@ function Note({ note, onFavoriteToggle, onDeleteNote }) {
 
   const handleFavoriteToggle = async () => {
     try {
-      const updatedNote = await toggleFavorite(note.id, !note.favorite);
-      onFavoriteToggle(updatedNote);
+      const response = await toggleFavorite(note.id, !note.favorite);
+      if (response.length > 0) {
+        response.forEach(e => toast.error(e));
+      } else {
+        onFavoriteToggle(response);
+      }
     } catch {
       toast.error('Failed to submit note');
     }

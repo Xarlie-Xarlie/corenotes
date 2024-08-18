@@ -15,8 +15,12 @@ const useFavoriteToggle = () => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to submit note');
+        const { error } = await response.json();
+        if (typeof error === 'string') {
+          return [error];
+        } else {
+          return error;
+        }
       }
 
       return await response.json();

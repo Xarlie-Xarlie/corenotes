@@ -171,12 +171,25 @@ describe('Note Component - Favorite toggle', () => {
     useDeleteNote.mockReturnValue({ deleteNote: jest.fn() });
   });
 
-  test('Clicking the favorite button triggers onFavoriteToggle callback', () => {
+  test('Clicking the favorite button triggers onFavoriteToggle hook', () => {
     render(<Note note={mockNote} />);
 
     fireEvent.click(screen.getByAltText('Favorite'));
 
     expect(mockFavoriteToggle).toHaveBeenCalledWith(mockNote.id, !mockNote.favorite);
+  });
+
+  test('Clicking the favorite button triggers onFavoriteToggle callback', async () => {
+    const mockOnFavoriteToggle = jest.fn();
+    mockFavoriteToggle.mockReturnValue({ ...mockNote, favorite: !mockNote.favorite })
+    render(<Note note={mockNote} onFavoriteToggle={mockOnFavoriteToggle} />);
+
+    fireEvent.click(screen.getByAltText('Favorite'));
+
+    await waitFor(() => {
+      expect(mockFavoriteToggle).toHaveBeenCalledWith(mockNote.id, !mockNote.favorite);
+      expect(mockOnFavoriteToggle).toHaveBeenCalledWith({ ...mockNote, favorite: !mockNote.favorite })
+    })
   });
 });
 
@@ -201,7 +214,7 @@ describe('Note Component - Change Color', () => {
     });
   });
 
-  test('Clicking the changeColor button and then a color triggers onUpdate callback with new color', () => {
+  test('Clicking the changeColor button and then a color triggers onUpdate hook with new color', () => {
     render(<Note note={mockNote} />);
 
     fireEvent.click(screen.getByAltText('Change Color'));
@@ -247,12 +260,25 @@ describe('Note Component - Delete Note', () => {
     useDeleteNote.mockReturnValue({ deleteNote: mockDeleteNote });
   });
 
-  test('Clicking the delete button triggers onDelete callback', () => {
+  test('Clicking the delete button triggers onDelete hook', () => {
     render(<Note note={mockNote} />);
 
     fireEvent.click(screen.getByAltText('Delete'));
 
     expect(mockDeleteNote).toHaveBeenCalledWith(mockNote.id);
+  });
+
+  test('Clicking the delete button triggers onDeleteNote callback', async () => {
+    const mockOnDeleteNote = jest.fn();
+    mockDeleteNote.mockResolvedValue(null);
+    render(<Note note={mockNote} onDeleteNote={mockOnDeleteNote} />);
+
+    fireEvent.click(screen.getByAltText('Delete'));
+
+    await waitFor(() => {
+      expect(mockDeleteNote).toHaveBeenCalledWith(mockNote.id);
+      expect(mockOnDeleteNote).toHaveBeenCalledWith(mockNote);
+    })
   });
 });
 
@@ -310,7 +336,7 @@ describe('Note Component - Toast Messages', () => {
     expect(mockUpdateNote).not.toHaveBeenCalled();
   });
 
-  test('If the onUpdate callback fails, it shows an error toast', async () => {
+  test('If the onUpdate hook fails, it shows an error toast', async () => {
     mockUpdateNote.mockRejectedValueOnce(new Error('Failed to submit note'));
 
     render(<Note note={mockNote} />);
@@ -325,19 +351,38 @@ describe('Note Component - Toast Messages', () => {
     expect(mockUpdateNote).toHaveBeenCalled();
   });
 
-  test('If the onFavoriteToggle callback fails, it shows an error toast', async () => {
-    mockFavoriteToggle.mockRejectedValueOnce(new Error('Failed to submit note'));
+  test('If the toggleFavorite hook fails, it shows all toast error messages', async () => {
+    mockFavoriteToggle.mockResolvedValue(['Title is null', 'Description is greater than allowed']);
+    const mockOnFavoriteToggle = jest.fn();
 
-    render(<Note note={mockNote} />);
+    render(<Note note={mockNote} onFavoriteToggle={mockOnFavoriteToggle} />);
+
+    fireEvent.click(screen.getByAltText('Favorite'));
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith('Title is null');
+      expect(toast.error).toHaveBeenCalledWith('Description is greater than allowed');
+      expect(mockFavoriteToggle).toHaveBeenCalledWith(1, true)
+      expect(mockOnFavoriteToggle).not.toHaveBeenCalled()
+    });
+  });
+
+  test('If the toggleFavorite hook fails, it shows a default error toast', async () => {
+    mockFavoriteToggle.mockRejectedValueOnce(new Error('Failed to submit note'));
+    const mockOnFavoriteToggle = jest.fn();
+
+    render(<Note note={mockNote} onFavoriteToggle={mockOnFavoriteToggle} />);
 
     fireEvent.click(screen.getByAltText('Favorite'));
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith('Failed to submit note');
+      expect(mockFavoriteToggle).toHaveBeenCalledWith(1, true)
+      expect(mockOnFavoriteToggle).not.toHaveBeenCalled()
     });
   });
 
-  test('If the onDelete callback fails, it shows an error toast', async () => {
+  test('If the onDelete hook fails, it shows an error toast', async () => {
     mockDeleteNote.mockRejectedValueOnce(new Error('Failed to delete note'));
 
     render(<Note note={mockNote} />);
@@ -349,7 +394,7 @@ describe('Note Component - Toast Messages', () => {
     });
   });
 
-  test('If the onDelete callback fails, it shows an error toast', async () => {
+  test('If the onDelete hook fails, it shows an error toast', async () => {
     mockDeleteNote.mockRejectedValueOnce(new Error('Failed to delete note'));
 
     render(<Note note={mockNote} />);
@@ -362,7 +407,7 @@ describe('Note Component - Toast Messages', () => {
   });
 
 
-  test('If the onDelete callback returns an error message, it shows an error toast', async () => {
+  test('If the onDelete hook returns an error message, it shows an error toast', async () => {
     mockDeleteNote.mockReturnValueOnce('Note not found');
 
     render(<Note note={mockNote} />);
