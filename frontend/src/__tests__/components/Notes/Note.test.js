@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import Note from './Note';
-import favoriteIcon from '../../assets/favorite-on.png';
+import Note from '../../../components/Notes/Note';
+import favoriteIcon from '../../../assets/favorite-on.png';
 import { toast } from 'react-toastify';
-import useUpdateNote from '../../hooks/useUpdateNote';
-import useFavoriteToggle from '../../hooks/useFavoriteToggle';
-import useDeleteNote from '../../hooks/useDeleteNote';
+import useUpdateNote from '../../../hooks/useUpdateNote';
+import useFavoriteToggle from '../../../hooks/useFavoriteToggle';
+import useDeleteNote from '../../../hooks/useDeleteNote';
 
 const mockNote = {
   id: 1,
@@ -15,9 +15,9 @@ const mockNote = {
   color: '#FF5733'
 };
 
-jest.mock('../../hooks/useUpdateNote');
-jest.mock('../../hooks/useFavoriteToggle');
-jest.mock('../../hooks/useDeleteNote');
+jest.mock('../../../hooks/useUpdateNote');
+jest.mock('../../../hooks/useFavoriteToggle');
+jest.mock('../../../hooks/useDeleteNote');
 jest.mock('react-toastify', () => ({
   toast: {
     success: jest.fn(),

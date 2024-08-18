@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import SearchNotes from './SearchNotes.js';
-import noteIcon from '../../assets/note-icon.png';
-import searchIcon from '../../assets/search-icon.png';
-import cross from '../../assets/cross.svg';
+import SearchNotes from '../../../components/SearchNotes/SearchNotes';
+import noteIcon from '../../../assets/note-icon.png';
+import searchIcon from '../../../assets/search-icon.png';
+import cross from '../../../assets/cross.svg';
 
 describe('SearchNotes Component', () => {
   test('renders CoreNotes heading', () => {

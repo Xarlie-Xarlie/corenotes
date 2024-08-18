@@ -17,7 +17,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll=false",
-    "coverage": "react-scripts test --watchAll=false --coverage",
+    "coverage": "react-scripts test --watchAll=false --coverage --collectCoverageFrom='src/components/**/*.js|src/hooks/**/*.js|src/App.js'",
     "test:watch": "react-scripts test",
     "eject": "react-scripts eject"
   },

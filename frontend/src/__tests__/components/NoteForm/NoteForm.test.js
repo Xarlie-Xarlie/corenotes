@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import NoteForm from './NoteForm';
-import useSubmitNote from '../../hooks/useSubmitNote';
+import NoteForm from '../../../components/NoteForm/NoteForm';
+import useSubmitNote from '../../../hooks/useSubmitNote';
 import { toast } from 'react-toastify';
 
-jest.mock('../../hooks/useSubmitNote');
+jest.mock('../../../hooks/useSubmitNote');
 
 jest.mock('react-toastify', () => ({
   toast: {

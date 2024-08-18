@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Notes from './Notes';
+import Notes from '../../../components/Notes/Notes';
 
 describe('Notes Component', () => {
   test('renders only favorite notes and displays "Favoritas"', () => {
