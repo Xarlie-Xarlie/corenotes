@@ -10,13 +10,13 @@ describe('useDeleteNote', () => {
   it('should delete a note successfully', async () => {
     fetch.mockResolvedValue({
       ok: true,
-      json: async () => ({})
+      json: async () => null
     });
 
     const { result } = renderHook(() => useDeleteNote());
 
     await waitFor(async () => {
-      expect(await result.current.deleteNote(1)).toStrictEqual({});
+      expect(await result.current.deleteNote(1)).toStrictEqual(null);
     });
 
     expect(fetch).toHaveBeenCalledWith('http://localhost:3333/api/notes/1', {
