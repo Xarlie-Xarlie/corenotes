@@ -48,6 +48,19 @@ describe('SearchNotes Component - User Interactions', () => {
     expect(searchInputElement.value).toBe('New Note');
   });
 
+  test('when change search input and not press "enter" does not triggers onSearch', () => {
+    const onSearch = jest.fn();
+    render(<SearchNotes onSearch={onSearch} />);
+
+    const searchInputElement = screen.getByPlaceholderText('Pesquisar notas');
+
+    fireEvent.change(searchInputElement, { target: { value: 'New Note' } });
+    fireEvent.keyDown(searchInputElement, { key: 'T', code: '84' });
+
+    expect(searchInputElement.value).toBe('New Note');
+    expect(onSearch).not.toHaveBeenCalled();
+  });
+
   test('allows user to click to search based in the search input', () => {
     const onSearch = jest.fn();
     render(<SearchNotes onSearch={onSearch} />);

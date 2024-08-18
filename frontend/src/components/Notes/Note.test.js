@@ -144,6 +144,20 @@ describe('Note Component - Text updates', () => {
     expect(screen.getByText('Sample Note')).toBeInTheDocument();
     expect(screen.getByText('This is a sample note description.')).toBeInTheDocument();
   });
+
+  test('Clicking edit, changing title/description, and pressing "shift + enter" does not trigger onUpdate', () => {
+    render(<Note note={mockNote} />);
+
+    fireEvent.click(screen.getByAltText('Edit'));
+
+    const titleInput = screen.getByDisplayValue('Sample Note');
+
+    fireEvent.change(titleInput, { target: { value: 'Updated Note Title' } });
+    fireEvent.keyDown(titleInput, { key: 'Enter', shiftKey: true });
+
+    expect(mockUpdateNote).not.toHaveBeenCalled();
+    expect(titleInput.value).toBe('Updated Note Title');
+  });
 });
 
 describe('Note Component - Favorite toggle', () => {
@@ -250,7 +264,7 @@ describe('Note Component - Toast Messages', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockNote = { id: 1, title: 'Sample Title', description: 'Sample Description', favorite: false, color: '#BAE2FF' };
+    mockNote = { id: 1, title: 'Sample Title', description: 'Sample Description', favorite: false, color: '#FFFFFF' };
     mockUpdateNote = jest.fn();
     mockFavoriteToggle = jest.fn();
     mockDeleteNote = jest.fn();

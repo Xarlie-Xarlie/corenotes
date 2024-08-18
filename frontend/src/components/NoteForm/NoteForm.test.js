@@ -51,6 +51,20 @@ describe('NoteForm Component', () => {
     });
   });
 
+  test('do not submits the form when a key diferent from enter is pressed', async () => {
+    render(<NoteForm />);
+
+    const titleInput = screen.getByPlaceholderText('Título');
+
+    fireEvent.change(titleInput, { target: { value: 'Test Title' } });
+    fireEvent.keyDown(titleInput, { key: 't', code: '84' });
+
+    await waitFor(() => {
+      expect(submitNote).not.toHaveBeenCalled();
+      expect(titleInput.value).toBe('Test Title');
+    });
+  });
+
   test('toggles the favorite status when the icon is clicked', () => {
     render(<NoteForm />);
 
