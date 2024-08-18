@@ -321,6 +321,8 @@ describe('Note Component - Toast Messages', () => {
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith('Failed to submit note');
     });
+
+    expect(mockUpdateNote).toHaveBeenCalled();
   });
 
   test('If the onFavoriteToggle callback fails, it shows an error toast', async () => {
@@ -344,6 +346,31 @@ describe('Note Component - Toast Messages', () => {
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith('Failed to delete note');
+    });
+  });
+
+  test('If the onDelete callback fails, it shows an error toast', async () => {
+    mockDeleteNote.mockRejectedValueOnce(new Error('Failed to delete note'));
+
+    render(<Note note={mockNote} />);
+
+    fireEvent.click(screen.getByAltText('Delete'));
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith('Failed to delete note');
+    });
+  });
+
+
+  test('If the onDelete callback returns an error message, it shows an error toast', async () => {
+    mockDeleteNote.mockReturnValueOnce('Note not found');
+
+    render(<Note note={mockNote} />);
+
+    fireEvent.click(screen.getByAltText('Delete'));
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith('Note not found');
     });
   });
 });

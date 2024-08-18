@@ -36,8 +36,12 @@ function Note({ note, onFavoriteToggle, onDeleteNote }) {
 
   const handleDelete = async () => {
     try {
-      await deleteNote(note.id);
-      onDeleteNote(note)
+      const error = await deleteNote(note.id);
+      if (error) {
+        toast.error(error)
+      } else {
+        onDeleteNote(note)
+      }
     } catch {
       toast.error('Failed to delete note');
     }
