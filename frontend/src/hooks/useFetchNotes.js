@@ -23,8 +23,6 @@ const useFetchNotes = (searchTerm) => {
 
         if (data.notes) {
           setNotes(data.notes);
-        } else if (data.error) {
-          throw new Error(data.error);
         }
       } catch (err) {
         setError(err.message);
