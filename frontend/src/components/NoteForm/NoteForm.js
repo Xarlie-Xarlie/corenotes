@@ -43,7 +43,7 @@ function NoteForm({ onNoteCreated }) {
 
   return (
     <form className='flex justify-around mt-6 mb-10'>
-      <div className='border border-[#D9D9D9] shadow-md bg-white rounded-[30px] sm:rounded-md mx-4 md:mx-0 w-full md:w-1/3'>
+      <div className='border border-[#D9D9D9] shadow-md bg-white rounded-[30px] md:rounded-md mx-4 md:mx-0 w-full md:w-1/3'>
         <label className='cursor-text flex justify-between py-4 px-6 border-b'>
           <input
             className='w-full focus:outline-none placeholder-black'
@@ -57,7 +57,7 @@ function NoteForm({ onNoteCreated }) {
           <FavoriteIcon isFavorite={favorite} onClick={handleFavoriteToggle} />
         </label>
         <input
-          className="w-full px-6 py-6 focus:outline-none rounded-[30px] sm:rounded-md"
+          className="w-full px-6 py-6 focus:outline-none rounded-[30px] md:rounded-md"
           type="text"
           value={description}
           onChange={handleDescriptionChange}
