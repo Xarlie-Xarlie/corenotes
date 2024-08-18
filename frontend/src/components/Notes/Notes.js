@@ -1,6 +1,6 @@
 import Note from './Note';
 
-function Notes({ notes, onFavoriteToggle, onDeleteNote }) {
+function Notes({ notes, onUpdateNote, onDeleteNote }) {
   const favoriteNotes = notes.filter(note => note.favorite);
   const otherNotes = notes.filter(note => !note.favorite);
 
@@ -14,7 +14,7 @@ function Notes({ notes, onFavoriteToggle, onDeleteNote }) {
               <li key={note.id} className="grow lg:grow-0">
                 <Note
                   note={note}
-                  onFavoriteToggle={onFavoriteToggle}
+                  onUpdateNote={onUpdateNote}
                   onDeleteNote={onDeleteNote}
                 />
               </li>
@@ -30,7 +30,7 @@ function Notes({ notes, onFavoriteToggle, onDeleteNote }) {
               <li key={note.id} className="grow lg:grow-0">
                 <Note
                   note={note}
-                  onFavoriteToggle={onFavoriteToggle}
+                  onUpdateNote={onUpdateNote}
                   onDeleteNote={onDeleteNote}
                 />
               </li>

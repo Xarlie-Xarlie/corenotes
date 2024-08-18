@@ -171,7 +171,7 @@ describe('Note Component - Favorite toggle', () => {
     useDeleteNote.mockReturnValue({ deleteNote: jest.fn() });
   });
 
-  test('Clicking the favorite button triggers onFavoriteToggle hook', () => {
+  test('Clicking the favorite button triggers onUpdateNote hook', () => {
     render(<Note note={mockNote} />);
 
     fireEvent.click(screen.getByAltText('Favorite'));
@@ -179,16 +179,16 @@ describe('Note Component - Favorite toggle', () => {
     expect(mockFavoriteToggle).toHaveBeenCalledWith(mockNote.id, !mockNote.favorite);
   });
 
-  test('Clicking the favorite button triggers onFavoriteToggle callback', async () => {
-    const mockOnFavoriteToggle = jest.fn();
+  test('Clicking the favorite button triggers onUpdateNote callback', async () => {
+    const mockOnUpdateNote = jest.fn();
     mockFavoriteToggle.mockReturnValue({ ...mockNote, favorite: !mockNote.favorite })
-    render(<Note note={mockNote} onFavoriteToggle={mockOnFavoriteToggle} />);
+    render(<Note note={mockNote} onUpdateNote={mockOnUpdateNote} />);
 
     fireEvent.click(screen.getByAltText('Favorite'));
 
     await waitFor(() => {
       expect(mockFavoriteToggle).toHaveBeenCalledWith(mockNote.id, !mockNote.favorite);
-      expect(mockOnFavoriteToggle).toHaveBeenCalledWith({ ...mockNote, favorite: !mockNote.favorite })
+      expect(mockOnUpdateNote).toHaveBeenCalledWith({ ...mockNote, favorite: !mockNote.favorite })
     })
   });
 });
@@ -351,11 +351,80 @@ describe('Note Component - Toast Messages', () => {
     expect(mockUpdateNote).toHaveBeenCalled();
   });
 
+  test('If the onUpdate hook fails, it shows returned errors in toast', async () => {
+    mockUpdateNote.mockResolvedValue(['Title is null', 'Description is greater than allowed']);
+    const mockOnUpdateNote = jest.fn();
+
+    render(<Note note={mockNote} onUpdateNote={mockOnUpdateNote} />);
+
+    fireEvent.click(screen.getByAltText('Edit'));
+    fireEvent.keyDown(screen.getByDisplayValue('Sample Title'), { key: 'Enter', code: 'Enter' });
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith('Title is null');
+      expect(toast.error).toHaveBeenCalledWith('Description is greater than allowed');
+      expect(mockUpdateNote).toHaveBeenCalled();
+      expect(mockOnUpdateNote).not.toHaveBeenCalled();
+    });
+  });
+
+  test('If the onUpdate hook did not fail, toasts are not rendered', async () => {
+    mockUpdateNote.mockResolvedValue({ ...mockNote, title: 'Updated title' });
+    const mockOnUpdateNote = jest.fn();
+
+    render(<Note note={mockNote} onUpdateNote={mockOnUpdateNote} />);
+
+    fireEvent.click(screen.getByAltText('Edit'));
+    fireEvent.keyDown(screen.getByDisplayValue('Sample Title'), { key: 'Enter', code: 'Enter' });
+
+    await waitFor(() => {
+      expect(toast.error).not.toHaveBeenCalled();
+      expect(mockUpdateNote).toHaveBeenCalledWith(mockNote.id, mockNote.title, mockNote.description, mockNote.color);
+      expect(mockOnUpdateNote).toHaveBeenCalledWith({ ...mockNote, title: 'Updated title' });
+    });
+  });
+
+  test('If changeColor hook fails, it shows all toast messages', async () => {
+    mockUpdateNote.mockResolvedValue(['Color is null', 'This color is not allowed']);
+    const mockOnUpdateNote = jest.fn();
+
+    render(<Note note={mockNote} onUpdateNote={mockOnUpdateNote} />);
+
+    fireEvent.click(screen.getByAltText('Change Color'));
+
+    const newColor = COLORS[0];
+    fireEvent.click(screen.getByTestId(`color-${newColor}`));
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith('Color is null');
+      expect(toast.error).toHaveBeenCalledWith('This color is not allowed');
+      expect(mockUpdateNote).toHaveBeenCalledWith(mockNote.id, mockNote.title, mockNote.description, newColor);
+      expect(mockOnUpdateNote).not.toHaveBeenCalled();
+    });
+  });
+
+  test('If changeColor hook did not fail, toast messages are not rendered', async () => {
+    const newColor = COLORS[3];
+    mockUpdateNote.mockResolvedValue({ ...mockNote, color: newColor });
+    const mockOnUpdateNote = jest.fn();
+
+    render(<Note note={mockNote} onUpdateNote={mockOnUpdateNote} />);
+
+    fireEvent.click(screen.getByAltText('Change Color'));
+    fireEvent.click(screen.getByTestId(`color-${newColor}`));
+
+    await waitFor(() => {
+      expect(toast.error).not.toHaveBeenCalled();
+      expect(mockUpdateNote).toHaveBeenCalledWith(mockNote.id, mockNote.title, mockNote.description, newColor);
+      expect(mockOnUpdateNote).toHaveBeenCalledWith({ ...mockNote, color: newColor });
+    });
+  });
+
   test('If the toggleFavorite hook fails, it shows all toast error messages', async () => {
     mockFavoriteToggle.mockResolvedValue(['Title is null', 'Description is greater than allowed']);
-    const mockOnFavoriteToggle = jest.fn();
+    const mockOnUpdateNote = jest.fn();
 
-    render(<Note note={mockNote} onFavoriteToggle={mockOnFavoriteToggle} />);
+    render(<Note note={mockNote} onUpdateNote={mockOnUpdateNote} />);
 
     fireEvent.click(screen.getByAltText('Favorite'));
 
@@ -363,22 +432,22 @@ describe('Note Component - Toast Messages', () => {
       expect(toast.error).toHaveBeenCalledWith('Title is null');
       expect(toast.error).toHaveBeenCalledWith('Description is greater than allowed');
       expect(mockFavoriteToggle).toHaveBeenCalledWith(1, true)
-      expect(mockOnFavoriteToggle).not.toHaveBeenCalled()
+      expect(mockOnUpdateNote).not.toHaveBeenCalled()
     });
   });
 
   test('If the toggleFavorite hook fails, it shows a default error toast', async () => {
     mockFavoriteToggle.mockRejectedValueOnce(new Error('Failed to submit note'));
-    const mockOnFavoriteToggle = jest.fn();
+    const mockOnUpdateNote = jest.fn();
 
-    render(<Note note={mockNote} onFavoriteToggle={mockOnFavoriteToggle} />);
+    render(<Note note={mockNote} onUpdateNote={mockOnUpdateNote} />);
 
     fireEvent.click(screen.getByAltText('Favorite'));
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith('Failed to submit note');
       expect(mockFavoriteToggle).toHaveBeenCalledWith(1, true)
-      expect(mockOnFavoriteToggle).not.toHaveBeenCalled()
+      expect(mockOnUpdateNote).not.toHaveBeenCalled()
     });
   });
 

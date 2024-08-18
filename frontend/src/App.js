@@ -27,7 +27,7 @@ function App() {
     setNotes(prevNotes => prevNotes.filter(note => note.id !== deletedNote.id));
   };
 
-  const handleFavoriteToggle = (updatedNote) => {
+  const handleUpdatedNote = (updatedNote) => {
     setNotes(prevNotes =>
       prevNotes.map(note => note.id === updatedNote.id ? updatedNote : note)
     );
@@ -39,7 +39,7 @@ function App() {
       <NoteForm onNoteCreated={handleNoteCreated} />
       <Notes
         notes={notes}
-        onFavoriteToggle={handleFavoriteToggle}
+        onUpdateNote={handleUpdatedNote}
         onDeleteNote={handleNoteDeleted}
       />
       <ToastContainer />

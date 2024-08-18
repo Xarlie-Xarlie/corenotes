@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 
 const COLORS = ['#BAE2FF', '#B9FFDD', '#FFE8AC', '#FFCAB9', '#F99494', '#9DD6FF', '#ECA1FF', '#DAFF8B', '#FFA285', '#CDCDCD', '#979797', '#A99A7C'];
 
-function Note({ note, onFavoriteToggle, onDeleteNote }) {
+function Note({ note, onUpdateNote, onDeleteNote }) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(note.title);
   const [description, setDescription] = useState(note.description);
@@ -31,7 +31,7 @@ function Note({ note, onFavoriteToggle, onDeleteNote }) {
       if (response.length > 0) {
         response.forEach(e => toast.error(e));
       } else {
-        onFavoriteToggle(response);
+        onUpdateNote(response);
       }
     } catch {
       toast.error('Failed to submit note');
@@ -55,8 +55,12 @@ function Note({ note, onFavoriteToggle, onDeleteNote }) {
     setNoteColor(color);
     setShowColorSelector(false);
     try {
-      const updatedNote = await updateNote(note.id, title, description, color);
-      onFavoriteToggle(updatedNote);
+      const response = await updateNote(note.id, title, description, color);
+      if (response.length > 0) {
+        response.forEach(e => toast.error(e));
+      } else {
+        onUpdateNote(response);
+      }
     } catch {
       toast.error('Failed to submit note');
     }
@@ -77,8 +81,12 @@ function Note({ note, onFavoriteToggle, onDeleteNote }) {
     }
     setIsEditing(false);
     try {
-      const updatedNote = await updateNote(note.id, title, description, noteColor);
-      onFavoriteToggle(updatedNote);
+      const response = await updateNote(note.id, title, description, noteColor);
+      if (response.length > 0) {
+        response.forEach(e => toast.error(e));
+      } else {
+        onUpdateNote(response);
+      }
     } catch {
       toast.error('Failed to submit note');
     }

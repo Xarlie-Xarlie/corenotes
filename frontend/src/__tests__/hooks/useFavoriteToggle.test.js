@@ -1,7 +1,6 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import useFavoriteToggle from '../../hooks/useFavoriteToggle';
 
-// Mock the fetch function
 global.fetch = jest.fn();
 
 describe('useFavoriteToggle', () => {
