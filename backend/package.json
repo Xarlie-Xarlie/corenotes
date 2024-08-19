@@ -12,7 +12,8 @@
     "start:watch": "node --watch src/server.js",
     "pretest": "NODE_ENV=test npx sequelize-cli db:migrate",
     "test": "NODE_ENV=test node --test '**/test/**/*.test.js'",
-    "coverage": "NODE_ENV=test NODE_V8_COVERAGE=coverage/ node --test --experimental-test-coverage coverage/ '**/test/**/*.test.js'",
+    "coverage": "NODE_ENV=test NODE_V8_COVERAGE=coverage/ node --test --experimental-test-coverage '**/test/**/*.test.js'",
+    "coverage:lcov": "NODE_ENV=test node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info '**/test/**/*.test.js'",
     "test:watch": "NODE_ENV=test node --watch --test '**/test/**/*.test.js'"
   },
   "dependencies": {
