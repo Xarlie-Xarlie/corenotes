@@ -17,6 +17,8 @@
     "test:watch": "NODE_ENV=test node --watch --test '**/test/**/*.test.js'"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "babel-register": "^6.26.0",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "pg": "^8.12.0",
@@ -25,8 +27,5 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },
-  "devDependencies": {
-    "@faker-js/faker": "^8.4.1",
-    "babel-register": "^6.26.0"
-  }
+  "devDependencies": {}
 }
