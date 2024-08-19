@@ -12,6 +12,7 @@
     "start:watch": "node --watch src/server.js",
     "pretest": "NODE_ENV=test npx sequelize-cli db:migrate",
     "test": "NODE_ENV=test node --test '**/test/**/*.test.js'",
+    "coverage": "NODE_ENV=test NODE_V8_COVERAGE=coverage/ node --test --experimental-test-coverage coverage/ '**/test/**/*.test.js'",
     "test:watch": "NODE_ENV=test node --watch --test '**/test/**/*.test.js'"
   },
   "dependencies": {
