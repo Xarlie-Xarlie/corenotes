@@ -4,3 +4,4 @@ README.md
 dockerfile
 setupTests.js
 **/*.test.js
+__tests__
