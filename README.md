@@ -1,6 +1,6 @@
 # CoreNotes
 
-CoreNotes is a full-stack application designed to manage to-do notes, built using Node.js and React.js.
+Full-stack application designed to manage to-do notes, built using Node.js and React.js.
 
 ![demo](output.gif)
 
@@ -29,16 +29,19 @@ The main goal of this project is to put into practice my full-stack development 
 If you have Docker and Docker Compose installed, follow these steps:
 
 1. Start the application:
+
    ```bash
    docker-compose up -d
    ```
 
 2. Run database migrations:
+
    ```bash
    docker exec -it corenotes-backend-1 npx sequelize-cli db:migrate
    ```
 
 3. (Optional) Run database seeds:
+
    ```bash
    docker exec -it corenotes-backend-1 npx sequelize-cli db:seed:all
    ```

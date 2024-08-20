@@ -6,20 +6,20 @@ const options = {
     openapi: '3.0.0',
     info: {
       title: 'Notes API',
-      description: "API endpoints for a notes service documented on swagger",
+      description: 'API endpoints for a notes service documented on swagger',
       contact: {
-        name: "Charlie Charlie",
-        email: "jeancharles552@gmail.com",
-        url: "https://github.com/Xarlie-Xarlie"
+        name: 'Charlie Charlie',
+        email: 'jeancharles552@gmail.com',
+        url: 'https://github.com/Xarlie-Xarlie',
       },
       version: '1.0.0',
     },
     servers: [
       {
-        url: "http://localhost:3333",
-        description: "Local server"
+        url: 'http://localhost:3333',
+        description: 'Local server',
       },
-    ]
+    ],
   },
   // looks for configuration in specified directories
   apis: ['./src/routes/*.js'],

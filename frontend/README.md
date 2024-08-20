@@ -7,13 +7,17 @@ The frontend provides a user interface to interact with notes, which are similar
 ## How to Run Locally
 
 ### 1. Install Dependencies
+
 In the project directory, install the required dependencies:
+
 ```bash
 npm install
 ```
 
 ### 2. Start the Application
+
 To start the application and automatically open a new browser tab:
+
 ```bash
 npm start
 ```
@@ -23,17 +27,23 @@ npm start
 All actions in the application are covered by tests.
 
 ### 1. Run Tests
+
 You can run the tests with:
+
 ```bash
 npm test
 ```
+
 For watch mode (auto-restart on changes), use:
+
 ```bash
 npm run test:watch
 ```
 
 ### 2. Run Test Coverage
+
 To check test coverage, use:
+
 ```bash
 npm run coverage
 ```

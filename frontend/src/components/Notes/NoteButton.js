@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 function NoteButton({ icon, altText, onClick, isEditing }) {
   return (
@@ -8,7 +8,7 @@ function NoteButton({ icon, altText, onClick, isEditing }) {
       alt={altText}
       onClick={onClick}
     />
-  );
+  )
 }
 
-export default NoteButton;
+export default NoteButton

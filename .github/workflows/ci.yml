@@ -28,6 +28,10 @@ jobs:
       working-directory: backend
       run: npm install
 
+    - name: Check code formatting
+      run: npx prettier . --check
+      working-directory: ./frontend
+
     - name: Run tests
       working-directory: backend
       run: npm test
@@ -61,6 +65,10 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+      working-directory: ./frontend
+
+    - name: Check code formatting
+      run: npx prettier . --check
       working-directory: ./frontend
 
     - name: Run Coverage Tests

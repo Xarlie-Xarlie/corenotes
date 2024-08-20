@@ -1,38 +1,39 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 
 const url = process.env.API_URL || 'http://localhost'
 const port = process.env.API_PORT || '3333'
 
 const useFetchNotes = (searchTerm) => {
-  const [notes, setNotes] = useState([]);
-  const [error, setError] = useState(null);
+  const [notes, setNotes] = useState([])
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const getUrl = searchTerm === '' ?
-          `${url}:${port}/api/notes`
-          : `${url}:${port}/api/notes?search=${searchTerm}`;
+        const getUrl =
+          searchTerm === ''
+            ? `${url}:${port}/api/notes`
+            : `${url}:${port}/api/notes?search=${searchTerm}`
 
-        const response = await fetch(getUrl);
+        const response = await fetch(getUrl)
         if (!response.ok) {
-          throw new Error('Failed to fetch notes');
+          throw new Error('Failed to fetch notes')
         }
 
-        const data = await response.json();
+        const data = await response.json()
 
         if (data.notes) {
-          setNotes(data.notes);
+          setNotes(data.notes)
         }
       } catch (err) {
-        setError(err.message);
+        setError(err.message)
       }
-    };
+    }
 
-    fetchNotes();
-  }, [searchTerm]);
+    fetchNotes()
+  }, [searchTerm])
 
-  return { notes, setNotes, error };
-};
+  return { notes, setNotes, error }
+}
 
-export default useFetchNotes;
+export default useFetchNotes

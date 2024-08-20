@@ -1,6 +1,12 @@
-import { Router } from 'express';
+import { Router } from 'express'
 
-import { getAllNotes, getNoteById, createNote, updateNote, deleteNote } from '../controllers/noteController.js';
+import {
+  getAllNotes,
+  getNoteById,
+  createNote,
+  updateNote,
+  deleteNote,
+} from '../controllers/noteController.js'
 
 /**
  * @swagger
@@ -84,7 +90,7 @@ import { getAllNotes, getNoteById, createNote, updateNote, deleteNote } from '..
  *         favorite: true
  *
  */
-const router = Router();
+const router = Router()
 
 /**
  * @openapi
@@ -115,7 +121,7 @@ const router = Router();
  *                   items:
  *                     $ref: '#/components/schemas/Notes'
  *                   properties:
- *                     id: 
+ *                     id:
  *                       type: integer
  *                     title:
  *                       type: string
@@ -270,10 +276,10 @@ const router = Router();
  *             schema:
  *               $ref: '#/components/schemas/FailedRequest'
  */
-router.get('/', getAllNotes);
-router.get('/:id', getNoteById);
-router.post('/', createNote);
-router.put('/:id', updateNote);
-router.delete('/:id', deleteNote);
+router.get('/', getAllNotes)
+router.get('/:id', getNoteById)
+router.post('/', createNote)
+router.put('/:id', updateNote)
+router.delete('/:id', deleteNote)
 
-export default router;
+export default router

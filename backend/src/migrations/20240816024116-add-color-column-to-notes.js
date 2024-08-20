@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -17,13 +17,13 @@ module.exports = {
         '#FFA285',
         '#CDCDCD',
         '#979797',
-        '#A99A7C'
+        '#A99A7C',
       ),
       allowNull: false,
-    });
+    })
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeColumn('Notes', 'search');
-  }
-};
+    await queryInterface.removeColumn('Notes', 'search')
+  },
+}

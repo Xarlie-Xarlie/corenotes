@@ -39,7 +39,9 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "prettier": "3.3.3"
+  },
   "jest": {
     "coverageThreshold": {
       "global": {

@@ -9,21 +9,21 @@ const useSubmitNote = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ title, description, favorite }),
-      });
-      const result = await response.json();
+      })
+      const result = await response.json()
 
       if (result.errors) {
         return result
       } else if (!response.ok) {
-        throw new Error('Failed to submit the note');
+        throw new Error('Failed to submit the note')
       }
-      return result;
+      return result
     } catch (err) {
-      throw err;
-    };
+      throw err
+    }
   }
 
-  return { submitNote };
+  return { submitNote }
 }
 
-export default useSubmitNote;
+export default useSubmitNote
